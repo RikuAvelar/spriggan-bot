@@ -247,7 +247,8 @@ client.on('messageCreate', async (msg: Message) => {
             await onMessage(msg);
         } catch(e) {
             console.error(e);
-            console.log(e.errors);
+            console.error('Origina message from ' + msg.author.username);
+            console.error(msg.content);
         }
     }
 });
