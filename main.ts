@@ -169,14 +169,14 @@ const onMessage = async (msg: Message) => {
                     images.push(`https://static.ffxiah.com/images/icon/${item.itemId}.png`);
                 }
             } else {
-                let augText = augments.length ? `\n\nAugments: \n${augments.join('\n')}` : '';
+                const augText = augments.length ? `\n\nAugments: \n${augments.join('\n')}` : '';
                 let descriptionText = alreadyDesc.has(name) ? '' : `\n\n${item.description.join('\n')}` || '';
 
-                if (descriptionText.length > 240) {
-                    descriptionText = descriptionText.substr(0, 240) + '...';
+                if (descriptionText.length > 220) {
+                    descriptionText = descriptionText.substr(0, 220) + '...';
                 }
-                if (descriptionText.length + augText.length > 250) {
-                    augText = '\n\n(Augments hidden because too chonky)'
+                if (augText.length && descriptionText.length + augText.length > 220) {
+                    descriptionText = '';
                 }
                 value += `[${item.name}](https://www.ffxiah.com/item/${item.itemId} '${name}${descriptionText}${augText}') | `;
                 images.push(`https://static.ffxiah.com/images/icon/${item.itemId}.png`);
