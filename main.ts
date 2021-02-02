@@ -41,7 +41,7 @@ const ROW_NAMES = [
     'Back     Waist   Legs      Feet'
 ]
 
-const DISCORD_TOKEN = Deno.readTextFileSync('.token');
+const DISCORD_TOKEN = Deno.readTextFileSync('.token').trim();
 
 const itemDescriptionExpr = /(([\w\s\d\:\+\-\"\.]{1,28}\d+?%?)\s|\"[\w\s\d\'\:\+\-\.]+\"|[\w\s\d\'\:\+\-\.]+:|.+)/g;
 const setName = /sets\.(.+)\s?=/;
@@ -146,6 +146,7 @@ const onMessage = async (msg: Message) => {
     }
 
     const dupeCheck: string[] = [];
+    const alreadyDesc: Set<string> = new Set();
 
     for (const row of SLOTS) {
         let value = '';
@@ -163,17 +164,21 @@ const onMessage = async (msg: Message) => {
                     images.push(`https://static.ffxiah.com/images/icon/${item.itemId}.png`);
                 }
             } else {
-                const augText = augments.length ? `\n\nAugments: \n${augments.join('\n')}` : '';
-                let descriptionText = `\n\n${item.description.join('\n')}` || '';
+                let augText = augments.length ? `\n\nAugments: \n${augments.join('\n')}` : '';
+                let descriptionText = alreadyDesc.has(name) ? '' : `\n\n${item.description.join('\n')}` || '';
 
                 if (descriptionText.length > 240) {
                     descriptionText = descriptionText.substr(0, 240) + '...';
+                }
+                if (descriptionText.length + augText.length > 250) {
+                    augText = '\n\n(Augments hidden because too chonky)'
                 }
                 value += `[${item.name}](https://www.ffxiah.com/item/${item.itemId} '${name}${descriptionText}${augText}') | `;
                 images.push(`https://static.ffxiah.com/images/icon/${item.itemId}.png`);
                 if (DUPE_MAP[slot]) {
                     dupeCheck.push(DUPE_MAP[slot]);
                 }
+                alreadyDesc.add(name);
             }
         }
 
@@ -196,6 +201,7 @@ const onMessage = async (msg: Message) => {
     let i = 0;
     let j = 0;
     for (const [field, images] of fields) {
+        console.log(field.length);
         embed.addField(ROW_NAMES[i], field);
         for (const img of images) {
             const imgResp = await fetch(img);
