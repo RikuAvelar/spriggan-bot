@@ -2,6 +2,7 @@
 import { Client, Intents, Message, Embed, MessageAttachment, GatewayIntents } from 'https://cdn.jsdelivr.net/gh/harmonyland/harmony@dbb80f30/mod.ts';
 import { DOMParser, Element } from "https://deno.land/x/deno_dom@v0.1.5-alpha/deno-dom-wasm.ts";
 import { Image } from 'https://deno.land/x/imagescript@1.1.16/mod.ts';
+import { HSLToHex } from './color.ts';
 
 // import { Client } from 'https://deno.land/x/discorddeno@0.0.1/index.ts';
 
@@ -113,18 +114,22 @@ const colorWheel = (str: string) => {
     return Math.abs(hash) % 360;
 };
 const getMod = (str?: string) => {
-    if (!str) return ['45%', '65%'];
+    if (!str) return [45, 65];
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
         hash = str.charCodeAt(i) + ((hash << 5) - hash);
     }
 
     return [
-        `${Math.floor((hash >> 16 & 0x000000FF) / 256 * 0.7 * 100 + 15)}%`,
-        `${Math.floor((hash >> 8 & 0x000000FF) / 256 * 0.30 * 100 + 45)}%`
+        Math.floor((hash >> 16 & 0x000000FF) / 256 * 0.7 * 100 + 15),
+        Math.floor((hash >> 8 & 0x000000FF) / 256 * 0.30 * 100 + 45)
     ];
 }
-const getSetColor = (str: string, mod?: string) => `hsla(${colorWheel(str)}, ${getMod(mod).join(',')}, 1)`;
+const getSetColor = (str: string, mod?: string) => {
+    const [s, l] = getMod(mod);
+    // console.log(`0x${HSLToHex(colorWheel(str), s, l)}`, parseInt(`${HSLToHex(colorWheel(str), s, l)}`, 16))
+    return HSLToHex(colorWheel(str), s, l);
+}
 
 const onMessage = async (msg: Message) => {
     const gearset = getGearset(msg.content);
@@ -201,7 +206,7 @@ const onMessage = async (msg: Message) => {
     let i = 0;
     let j = 0;
     for (const [field, images] of fields) {
-        console.log(field.length);
+        // console.log(field.length);
         embed.addField(ROW_NAMES[i], field);
         for (const img of images) {
             const imgResp = await fetch(img);
