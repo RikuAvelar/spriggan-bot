@@ -41,20 +41,13 @@ const ROW_NAMES = [
     'Back     Waist   Legs      Feet'
 ]
 
-const DISCORD_TOKEN = 'ODA1ODYxMTMyNjUyOTA0NDY4.YBhCqg.t8qEgRnxEg70HflueEKrnB1QcYM';
+const DISCORD_TOKEN = Deno.readTextFileSync('.token');
 
 const itemDescriptionExpr = /(([\w\s\d\:\+\-\"\.]{1,28}\d+?%?)\s|\"[\w\s\d\'\:\+\-\.]+\"|[\w\s\d\'\:\+\-\.]+:|.+)/g;
 const setName = /sets\.(.+)\s?=/;
 const itemId = /item\/(\d+)/;
 const tableExpr = /\{((?:.|\n)+)\}/gm;
 const tableElements = /([\w\d]+)\=(.+)/g;
-
-// const client = new Aether.Client('ODA1ODYxMTMyNjUyOTA0NDY4.YBhCqg.t8qEgRnxEg70HflueEKrnB1QcYM', {
-//     intents: Aether.DefaultIntents,
-//     allowedEvents: ['messageCreate', 'ready'],
-// });
-
-// client.connect();
 
 const getItemInfo = async (name: string): Promise<ItemInfo> => {
     if (!name) {
@@ -217,9 +210,7 @@ const onMessage = async (msg: Message) => {
     }
     image.resize(32*4*1.25, 32*4*1.25);
     const imgData = await image.encode();
-    // await Deno.writeFile('./gearset.png', imgData);
     const attach = new MessageAttachment('gearset.png', imgData);
-    // const attach = await MessageAttachment.load('./gearset.png', 'gearset.png');
     embed.attach(attach);
     embed.setImage({
         height: 32*4,
@@ -227,9 +218,6 @@ const onMessage = async (msg: Message) => {
         url: 'attachment://gearset.png'
     });
 
-    // embed.
-    // embed.setImage('attachment://gearset.png');
-    // console.log(new Blob([imgData]));
     console.log('Sending...');
     await msg.channel.send(embed, {file: attach})
 
@@ -255,23 +243,3 @@ client.on('messageCreate', async (msg: Message) => {
 
 
 client.connect(DISCORD_TOKEN, Intents.NonPrivileged)
-
-// console.log(await getItemInfo('idris'));
-
-// console.log(await onMessage(`!gs sets.Malignance = {
-//     main="Idris",
-//     sub="Daybreak",
-//     head="Azimuth Hood +1",
-//     body="Geomancy Tunic +3",
-//     hands="Geo. Mitaines +3",
-//     legs="Geomancy Pants +2",
-//     feet="Geo. Sandals +3",
-//     neck="Loricate Torque +1",
-//     waist="Rumination Sash",
-//     left_ear="Suppanomimi",
-//     right_ear="Etiolation Ear",
-//     left_ring="Defending Ring",
-//     right_ring="Vocane Ring",
-//     back={ name="Mecisto. Mantle", augments={'Cap. Point+49%','HP+17','DEF+9',}},
-// }
-// `))

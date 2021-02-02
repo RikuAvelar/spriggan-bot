@@ -1,1 +1,1 @@
-bot: deno run --allow-net --unstable --allow-read index.ts
+web: deno run --allow-net --unstable --allow-read main.ts
