@@ -1,5 +1,5 @@
 // deno-lint-ignore-file camelcase
-import { Client, Intents, Message, Embed, MessageAttachment } from 'https://cdn.jsdelivr.net/gh/harmonyland/harmony@dbb80f30/mod.ts';
+import { Client, Intents, Message, Embed, MessageAttachment, GatewayIntents } from 'https://cdn.jsdelivr.net/gh/harmonyland/harmony@dbb80f30/mod.ts';
 import { DOMParser, Element } from "https://deno.land/x/deno_dom@v0.1.5-alpha/deno-dom-wasm.ts";
 import { Image } from 'https://deno.land/x/imagescript@1.1.16/mod.ts';
 
@@ -22,14 +22,14 @@ interface Gearset {
     head?: string;
     neck?: string;
     ear1?: string;
-    left_earring?: string;
-    right_earring?: string;
+    left_ear?: string;
+    right_ear?: string;
     ear2?: string;
 }
 
 const SLOTS = [
     ['main', 'sub', 'range', 'ammo'],
-    ['head', 'neck', 'ear1', 'left_earring', 'ear2', 'right_earring'],
+    ['head', 'neck', 'ear1', 'left_ear', 'ear2', 'right_ear'],
     ['body', 'hands', 'ring1', 'left_ring', 'ring2', 'right_ring'],
     ['back', 'waist', 'legs', 'feet'],
 ];
@@ -146,8 +146,8 @@ const onMessage = async (msg: Message) => {
     ];
 
     const DUPE_MAP: {[key: string]: string} = {
-        'ear1': 'left_earring',
-        'ear2': 'right_earring',
+        'ear1': 'left_ear',
+        'ear2': 'right_ear',
         'ring1': 'left_ring',
         'ring2': 'right_ring',
     }
@@ -269,7 +269,7 @@ client.connect(DISCORD_TOKEN, Intents.NonPrivileged)
 //     neck="Loricate Torque +1",
 //     waist="Rumination Sash",
 //     left_ear="Suppanomimi",
-//     right_ear="Etiolation Earring",
+//     right_ear="Etiolation Ear",
 //     left_ring="Defending Ring",
 //     right_ring="Vocane Ring",
 //     back={ name="Mecisto. Mantle", augments={'Cap. Point+49%','HP+17','DEF+9',}},
