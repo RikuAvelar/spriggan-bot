@@ -45,7 +45,7 @@ const ROW_NAMES = [
 const DISCORD_TOKEN = Deno.readTextFileSync('.token').trim();
 
 const itemDescriptionExpr = /(([\w\s\d\:\+\-\"\.]{1,28}\d+?%?)\s|\"[\w\s\d\'\:\+\-\.]+\"|[\w\s\d\'\:\+\-\.]+:|.+)/g;
-const setName = /sets\.(.+)\s?=/;
+const setName = /sets\.(.+)\s*=\s*(?={)/;
 const itemId = /item\/(\d+)/;
 const tableExpr = /\{((?:.|\n)+)\}/gm;
 const tableElements = /([\w\d]+)\=(.+)/g;
