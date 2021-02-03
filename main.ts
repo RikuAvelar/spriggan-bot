@@ -50,7 +50,7 @@ const itemId = /item\/(\d+)/;
 const tableExpr = /\{((?:.|\n)+)\}/gm;
 const tableElements = /([\w\d]+)\=(.+)/g;
 
-const getItemInfo = async (name: string): Promise<ItemInfo> => {
+const getItemInfo = async (name: string, luaObj?: {description?: string}): Promise<ItemInfo> => {
     if (!name) {
        return {
            name: '',
@@ -86,7 +86,7 @@ const getItemInfo = async (name: string): Promise<ItemInfo> => {
 
     const bodyDoc = new DOMParser().parseFromString(body, 'text/html');
     // const description = bodyDoc?.querySelector('.item-stats')?.innerHTML.split('<br>')[1].match(itemDescriptionExpr) || [] as string[];
-    const description = bodyDoc?.querySelector('.item-stats')?.innerHTML.split('<br>')[1].split('\n') || [] as string[];
+    const description = luaObj?.description?.split('\n') || bodyDoc?.querySelector('.item-stats')?.innerHTML.split('<br>')[1].split('\n') || [] as string[];
 
     return {
         itemId: url.match(itemId)?.[1] || '0',
@@ -162,7 +162,7 @@ const onMessage = async (msg: Message) => {
             }
             const name = gearset[slot]?.name || gearset[slot];
             const augments: string[] = gearset[slot]?.augments || [];
-            const item: ItemInfo = await getItemInfo(name);
+            const item: ItemInfo = await getItemInfo(name, gearset[slot]);
             if (!item || item.itemId === '0') {
                 if (!DUPE_SKIP.includes(slot)) {
                     value += '[Empty](https://www.ffxiah.com/item/0) | ';
@@ -247,7 +247,7 @@ client.on('messageCreate', async (msg: Message) => {
             await onMessage(msg);
         } catch(e) {
             console.error(e);
-            console.error('Origina message from ' + msg.author.username);
+            console.error('Original message from ' + msg.author.username);
             console.error(msg.content);
         }
     }
