@@ -90,7 +90,7 @@ const getItemInfo = async (name: string, luaObj?: {description?: string}): Promi
 
     return {
         itemId: url.match(itemId)?.[1] || '0',
-        description: description.map(line => line.replace(/\'/g, '\\\'').trim()),
+        description: description.map(line => line.replace(/\'/g, '’').trim()),
         name
     };
 }
